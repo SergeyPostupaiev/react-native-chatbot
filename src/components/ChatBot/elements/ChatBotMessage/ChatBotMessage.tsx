@@ -1,17 +1,18 @@
-import React, {useEffect, useState, FunctionComponent} from 'react';
+import React, {useEffect, useState, FunctionComponent, Dispatch} from 'react';
 import {View, Text} from 'react-native';
 import {ChatbotMessageAvatar} from '../ChatBotMessageAvatar';
 import {Loader} from '../Loader';
+import {Message} from '../../../manager/helpers';
 import {styles} from './styles';
 
 interface ChatBotMessageProps {
-  messageText;
-  loading;
-  messages;
-  setState;
-  delay;
-  id;
-  withAvatar;
+  messageText: string;
+  loading: boolean;
+  messages: Message[];
+  setState: Dispatch<any>;
+  delay: number;
+  id: number;
+  withAvatar: boolean;
 }
 
 export const ChatBotMessage: FunctionComponent<ChatBotMessageProps> = ({

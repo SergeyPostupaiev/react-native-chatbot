@@ -12,13 +12,14 @@ import {ChatBotMessage} from '../ChatBotMessage';
 import {ChatBotMessageWithWidget} from '../ChatBotMessageWithWidget';
 import {botMessage, createChatMessage, showAvatar} from './utils';
 import {ChatBotState} from '../../../manager/helpers';
+import {WidgetRegistry, MessageParser} from '../../../manager/helpers';
 import {styles} from './styles';
 
 interface ChatProps {
   state: ChatBotState;
   setState: Dispatch<any>;
-  widgetRegistry;
-  messageParser;
+  widgetRegistry: WidgetRegistry;
+  messageParser: MessageParser;
 }
 
 export const Chat: FunctionComponent<ChatProps> = ({
@@ -63,6 +64,16 @@ export const Chat: FunctionComponent<ChatProps> = ({
           onContentSizeChange={handleContentSizeChange}
           showsVerticalScrollIndicator={false}>
           {messages.map((messageItem, index) => {
+            const withAvatar = showAvatar(messages, index);
+
+            const chatBotMessageProps = {
+              concreteMessageProps: {...messageItem},
+              setState,
+              state,
+              widgetRegistry,
+              messages,
+            };
+
             if (!botMessage(messageItem)) {
               return (
                 <UserChatMessage
@@ -72,16 +83,6 @@ export const Chat: FunctionComponent<ChatProps> = ({
                 />
               );
             }
-
-            const withAvatar = showAvatar(messages, index);
-
-            const chatBotMessageProps = {
-              passDownProps: {...messageItem},
-              setState,
-              state,
-              widgetRegistry,
-              messages,
-            };
 
             if (messageItem.widget) {
               return (
@@ -97,7 +98,7 @@ export const Chat: FunctionComponent<ChatProps> = ({
               <ChatBotMessage
                 key={index}
                 withAvatar={withAvatar}
-                {...chatBotMessageProps.passDownProps}
+                {...chatBotMessageProps.concreteMessageProps}
                 messages={messages}
                 setState={setState}
               />

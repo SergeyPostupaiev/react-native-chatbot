@@ -1,17 +1,18 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, Dispatch} from 'react';
 import {ChatBotMessage} from '../ChatBotMessage';
+import {Message, ChatBotState, WidgetRegistry} from '../../../manager/helpers';
 
 interface ChatBotMessageWithWidgetProps {
-  passDownProps;
-  messages;
-  setState;
-  state;
-  widgetRegistry;
-  withAvatar;
+  concreteMessageProps: Message;
+  messages: Message[];
+  setState: Dispatch<any>;
+  state: ChatBotState;
+  widgetRegistry: WidgetRegistry;
+  withAvatar: boolean;
 }
 
 export const ChatBotMessageWithWidget: FunctionComponent<ChatBotMessageWithWidgetProps> = ({
-  passDownProps,
+  concreteMessageProps,
   messages,
   setState,
   state,
@@ -21,14 +22,14 @@ export const ChatBotMessageWithWidget: FunctionComponent<ChatBotMessageWithWidge
   return (
     <React.Fragment>
       <ChatBotMessage
-        {...passDownProps}
+        {...concreteMessageProps}
         messages={messages}
         withAvatar={withAvatar}
         setState={setState}
       />
 
-      {!passDownProps.loading &&
-        widgetRegistry.getWidget(passDownProps.widget, {
+      {!concreteMessageProps.loading &&
+        widgetRegistry.getWidget(concreteMessageProps.widget, {
           ...state,
         })}
     </React.Fragment>
