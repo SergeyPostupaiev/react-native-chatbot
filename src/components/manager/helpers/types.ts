@@ -6,7 +6,6 @@ export type Message = {
   type: MessageSender;
   loading: boolean;
   terminatedLoading: boolean;
-  delay: number | undefined;
   widget: string;
   createDate: Date;
   messageText: string;

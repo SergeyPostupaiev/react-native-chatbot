@@ -35,6 +35,12 @@ export class ActionProvider {
     this.addMessageToState(message);
   };
 
+  handleGreetingCommand = () => {
+    const message = createChatBotMessage('Hello, how do you do?');
+
+    this.addMessageToState(message);
+  };
+
   handleDefaultCommand = () => {
     const message = createChatBotMessage(
       "Sorry, I do not understand you, try 'help' command.",

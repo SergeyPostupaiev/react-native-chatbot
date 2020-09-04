@@ -1,6 +1,5 @@
 import React, {
   useEffect,
-  useState,
   useCallback,
   FunctionComponent,
   Dispatch,
@@ -16,7 +15,6 @@ interface ChatBotMessageProps {
   loading: boolean;
   messages: Message[];
   setState: Dispatch<any>;
-  delay: number | undefined;
   id: number;
   withAvatar: boolean;
 }
@@ -26,56 +24,38 @@ export const ChatBotMessage: FunctionComponent<ChatBotMessageProps> = ({
   loading,
   messages,
   setState,
-  delay,
   id,
   withAvatar,
 }) => {
-  const [show, toggleShow] = useState(false);
-
   const disableLoading = useCallback(() => {
     let defaultDisableTime = 750;
-    if (delay) {
-      defaultDisableTime += delay;
-    }
+
     setTimeout(() => {
       const messageItem = messages.find((item) => item.id === id);
 
       if (messageItem) {
         messageItem.loading = false;
-        messageItem.delay = undefined;
 
         setState((state: ChatBotState) => ({...state, messages}));
       }
     }, defaultDisableTime);
-  }, [id, delay, messages, setState]);
+  }, [id, messages, setState]);
 
   useEffect(() => {
     disableLoading();
   }, [disableLoading]);
 
-  useEffect(() => {
-    if (delay) {
-      setTimeout(() => toggleShow(true), delay);
-    } else {
-      toggleShow(true);
-    }
-  }, [delay]);
-
   return (
-    <React.Fragment>
-      {show && (
-        <View style={styles.messageContainer}>
-          {withAvatar && <ChatbotMessageAvatar />}
+    <View style={styles.messageContainer}>
+      {withAvatar && <ChatbotMessageAvatar />}
 
-          <View style={styles.chatBotMessage}>
-            {loading ? (
-              <Loader />
-            ) : (
-              <Text style={styles.chatBotMessageText}>{messageText}</Text>
-            )}
-          </View>
-        </View>
-      )}
-    </React.Fragment>
+      <View style={styles.chatBotMessage}>
+        {loading ? (
+          <Loader />
+        ) : (
+          <Text style={styles.chatBotMessageText}>{messageText}</Text>
+        )}
+      </View>
+    </View>
   );
 };

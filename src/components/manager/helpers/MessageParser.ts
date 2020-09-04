@@ -5,10 +5,12 @@ export class MessageParser {
   helpCommandEvent: CommandObserver;
   productsCommandEvent: CommandObserver;
   defaultCommandEvent: CommandObserver;
+  greetCommandEvent: CommandObserver;
 
   constructor() {
     this.helpCommandEvent = new CommandObserver(this);
     this.productsCommandEvent = new CommandObserver(this);
+    this.greetCommandEvent = new CommandObserver(this);
     this.defaultCommandEvent = new CommandObserver(this);
   }
 
@@ -20,6 +22,10 @@ export class MessageParser {
 
       case message.includes(Commands.PRODUCTS):
         this.productsCommandEvent.notify();
+        break;
+
+      case message.includes(Commands.GREET):
+        this.greetCommandEvent.notify();
         break;
 
       default:

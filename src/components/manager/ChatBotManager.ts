@@ -32,6 +32,9 @@ export class ChatBotManager {
     this.messageParser.productsCommandEvent.subscribe(
       this.actionProvider.handleProductsCommand,
     );
+    this.messageParser.greetCommandEvent.subscribe(
+      this.actionProvider.handleGreetingCommand,
+    );
     this.messageParser.defaultCommandEvent.subscribe(
       this.actionProvider.handleDefaultCommand,
     );
