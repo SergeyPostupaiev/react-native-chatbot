@@ -1,4 +1,5 @@
 import {CommandObserver} from './CommandObserver';
+import {Commands} from '../commands';
 
 export class MessageParser {
   helpCommandEvent: CommandObserver;
@@ -13,11 +14,11 @@ export class MessageParser {
 
   parse = (message: string) => {
     switch (true) {
-      case message.includes('help'):
+      case message.includes(Commands.HELP):
         this.helpCommandEvent.notify();
         break;
 
-      case message.includes('products'):
+      case message.includes(Commands.PRODUCTS):
         this.productsCommandEvent.notify();
         break;
 

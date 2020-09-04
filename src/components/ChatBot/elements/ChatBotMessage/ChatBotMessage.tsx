@@ -1,8 +1,14 @@
-import React, {useEffect, useState, FunctionComponent, Dispatch} from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  FunctionComponent,
+  Dispatch,
+} from 'react';
 import {View, Text} from 'react-native';
 import {ChatbotMessageAvatar} from '../ChatBotMessageAvatar';
 import {Loader} from '../Loader';
-import {Message} from '../../../manager/helpers';
+import {Message, ChatBotState} from '../../../manager/helpers/types';
 import {styles} from './styles';
 
 interface ChatBotMessageProps {
@@ -10,13 +16,13 @@ interface ChatBotMessageProps {
   loading: boolean;
   messages: Message[];
   setState: Dispatch<any>;
-  delay: number;
+  delay: number | undefined;
   id: number;
   withAvatar: boolean;
 }
 
 export const ChatBotMessage: FunctionComponent<ChatBotMessageProps> = ({
-  messageText: message,
+  messageText,
   loading,
   messages,
   setState,
@@ -26,27 +32,26 @@ export const ChatBotMessage: FunctionComponent<ChatBotMessageProps> = ({
 }) => {
   const [show, toggleShow] = useState(false);
 
-  useEffect(() => {
-    const disableLoading = (messages, setState) => {
-      let defaultDisableTime = 750;
-      if (delay) {
-        defaultDisableTime += delay;
+  const disableLoading = useCallback(() => {
+    let defaultDisableTime = 750;
+    if (delay) {
+      defaultDisableTime += delay;
+    }
+    setTimeout(() => {
+      const messageItem = messages.find((item) => item.id === id);
+
+      if (messageItem) {
+        messageItem.loading = false;
+        messageItem.delay = undefined;
+
+        setState((state: ChatBotState) => ({...state, messages}));
       }
-      setTimeout(() => {
-        const message = messages.find((message) => message.id === id);
+    }, defaultDisableTime);
+  }, [id, delay, messages, setState]);
 
-        if (!message) {
-          return;
-        }
-        message.loading = false;
-        message.delay = undefined;
-
-        setState((state) => ({...state, messages: messages}));
-      }, defaultDisableTime);
-    };
-
-    disableLoading(messages, setState);
-  }, [delay, id, setState, messages]);
+  useEffect(() => {
+    disableLoading();
+  }, [disableLoading]);
 
   useEffect(() => {
     if (delay) {
@@ -66,7 +71,7 @@ export const ChatBotMessage: FunctionComponent<ChatBotMessageProps> = ({
             {loading ? (
               <Loader />
             ) : (
-              <Text style={styles.chatBotMessageText}>{message}</Text>
+              <Text style={styles.chatBotMessageText}>{messageText}</Text>
             )}
           </View>
         </View>

@@ -6,7 +6,7 @@ export type Message = {
   type: MessageSender;
   loading: boolean;
   terminatedLoading: boolean;
-  delay: number;
+  delay: number | undefined;
   widget: string;
   createDate: Date;
   messageText: string;
@@ -19,7 +19,7 @@ export type ChatBotState = {
 };
 
 export type Widget = {
-  widgetName: string;
+  widgetName?: string;
   widgetComponent: (props: any) => any;
   mapStateToProps?: string[];
   props?: any;

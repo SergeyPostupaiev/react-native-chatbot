@@ -5,6 +5,7 @@ import {ChatBotConfigsObject, Widget} from './types';
 export class WidgetRegistry {
   setState: React.Dispatch<any>;
   actionProvider: ActionProvider;
+  registeredWidgets: {[widgetName: string]: Widget};
 
   constructor(
     setState: React.Dispatch<any>,
@@ -13,6 +14,7 @@ export class WidgetRegistry {
   ) {
     this.setState = setState;
     this.actionProvider = actionProvider;
+    this.registeredWidgets = {};
 
     ChatBotConfigs.widgets.forEach((widget) => this.addWidget(widget));
   }
@@ -23,39 +25,32 @@ export class WidgetRegistry {
     mapStateToProps,
     props,
   }: Widget) => {
-    this[widgetName] = {
-      widget: widgetComponent,
+    this.registeredWidgets[widgetName!] = {
+      widgetComponent,
       props,
       mapStateToProps,
     };
   };
 
   getWidget = (widgetName: string, state: any) => {
-    const widgetObject = this[widgetName];
-
-    if (!widgetObject) {
-      return;
-    }
+    const widgetObject = this.registeredWidgets[widgetName];
 
     let props = {
-      scrollIntoView: state.scrollIntoView,
       ...widgetObject.props,
       ...this.mapStateToProps(widgetObject.mapStateToProps, state),
       setState: this.setState,
       actionProvider: this.actionProvider,
     };
 
-    return widgetObject.widget(props);
+    return widgetObject.widgetComponent(props);
   };
 
   mapStateToProps = (props: any, state: any) => {
-    if (!props) {
-      return;
+    if (props) {
+      return props.reduce((acc: any, prop: any) => {
+        acc[prop] = state[prop];
+        return acc;
+      }, {});
     }
-
-    return props.reduce((acc: any, prop: any) => {
-      acc[prop] = state[prop];
-      return acc;
-    }, {});
   };
 }

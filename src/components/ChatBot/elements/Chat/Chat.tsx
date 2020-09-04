@@ -5,13 +5,14 @@ import React, {
   FunctionComponent,
   Dispatch,
 } from 'react';
+import {ChatBotState} from '../../../manager/helpers';
 import {View, TextInput, ScrollView} from 'react-native';
 import {Button, Icon} from 'react-native-elements';
 import {UserChatMessage} from '../UserChatMessage';
 import {ChatBotMessage} from '../ChatBotMessage';
 import {ChatBotMessageWithWidget} from '../ChatBotMessageWithWidget';
+import {CommandList} from '../CommandList';
 import {botMessage, createChatMessage, showAvatar} from './utils';
-import {ChatBotState} from '../../../manager/helpers';
 import {WidgetRegistry, MessageParser} from '../../../manager/helpers';
 import {styles} from './styles';
 
@@ -106,7 +107,10 @@ export const Chat: FunctionComponent<ChatProps> = ({
           })}
         </ScrollView>
       </View>
-
+      <CommandList
+        handleCommandSubmit={handleSubmit}
+        setInputValue={setInputValue}
+      />
       <View style={styles.inputContainer}>
         <TextInput
           ref={cmdInput}

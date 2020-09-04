@@ -12,7 +12,6 @@ export const styles = StyleSheet.create({
   messageContainer: {
     flex: 1,
     paddingHorizontal: 17,
-    paddingBottom: 10,
   },
   inputField: {
     flex: 1,
